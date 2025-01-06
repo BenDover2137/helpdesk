@@ -3,6 +3,9 @@ DO ZROBIENIA:
 
 
 -css(ładny)
+
+
+
 -bootstrap(jakikolwiek)
 
 
