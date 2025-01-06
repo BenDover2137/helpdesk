@@ -1,0 +1,21 @@
+<h1>Profile Page</h1>
+<p>Welcome, {{ user.username }}!</p>
+
+
+<h2>Tickets {{ ticket_type }}</h2>
+{% if user_tickets %}
+    <ul>
+        {% for ticket in user_tickets %}
+            <li>
+                <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.title }}</a> - {{ ticket.status }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tickets {{ ticket_type }}.</p>
+{% endif %}
+
+{% if not is_tech_support %}
+    <p><a href="{% url 'ticket_create' %}">Create a New Ticket</a></p>
+{% endif %}
+<a href="{% url 'logout' %}">Logout</a>
