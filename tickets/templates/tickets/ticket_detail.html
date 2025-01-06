@@ -12,7 +12,7 @@
 <p>Created by: {{ ticket.created_by }}</p>
 <p>Assigned to: {{ ticket.assigned_to }}</p>
 
-<!-- Status Update Form (for the ticket creator or Tech Support users) -->
+
 {% if is_creator or is_tech_support %}
     <h2>Update Status</h2>
     <form method="post">
@@ -22,7 +22,7 @@
     </form>
 {% endif %}
 
-<!-- Comments Section -->
+
 <h2>Comments</h2>
 <ul>
     {% for comment in ticket.comments.all %}
@@ -30,7 +30,7 @@
     {% endfor %}
 </ul>
 
-<!-- Add Comment Form -->
+
 <h2>Add a Comment</h2>
 <form method="post">
     {% csrf_token %}
