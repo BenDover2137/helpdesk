@@ -1,17 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logged Out</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-</head>
-<body>
-    <div class="container text-center">
+{% extends 'base.html' %}
+
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+    <div class="text-center">
         <h1>Logged Out</h1>
         <p>You have been successfully logged out.</p>
         <a href="{% url 'login' %}" class="btn btn-primary">Login again</a>
     </div>
-</body>
-</html>
+{% endblock %}

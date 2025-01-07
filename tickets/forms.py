@@ -8,23 +8,19 @@ class TicketStatusForm(forms.ModelForm):
         model = Ticket
         fields = ['status']
 
-
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
 
-        if self.user and self.user == self.instance.created_by:
 
-            self.fields['status'].choices = [
-                ('open', 'Open'),
-            ]
-        elif self.user and self.user.groups.filter(name='Tech Support').exists():
-
+        if self.user and self.user.groups.filter(name='Tech Support').exists():
             self.fields['status'].choices = [
                 ('in_progress', 'In Progress'),
                 ('closed', 'Closed'),
             ]
+        else:
+            self.fields['status'].disabled = True
 
 class TicketForm(forms.ModelForm):
     class Meta:

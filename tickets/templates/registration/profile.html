@@ -1,52 +1,49 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>Profile Page</h1>
-        <p>Welcome, {{ user.username }}!</p>
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <h1>Your Profile</h1>
+    <p>Welcome, {{ user.username }}!</p>
+
+    {% if user_tickets %}
         <h2>Tickets {{ ticket_type }}</h2>
+        <ul class="ticket-list">
+            {% for ticket in user_tickets %}
+                <li>
+                    <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.title }}</a>
+                    <span class="status
+                        {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
 
-
-        {% if user_tickets %}
-            <ul class="ticket-list">
-                {% for ticket in user_tickets %}
-                    <li>
-                        <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.title }}</a>
-                        <span class="status
-                            {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
-                            {{ ticket.get_status_display }}
-                        </span>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No tickets {{ ticket_type }}.</p>
-        {% endif %}
-
-        {% if not is_tech_support %}
-            <a href="{% url 'ticket_create' %}" class="btn btn-primary">Create a New Ticket</a>
-        {% endif %}
-        <a href="{% url 'logout' %}" class="btn btn-link">Logout</a>
-        {% if messages %}
-        <script>
-            {% for message in messages %}
-                Swal.fire({
-                    icon: 'success',  // Use 'success', 'error', 'info', etc.
-                    title: '{{ message }}',
-                    showConfirmButton: false,
-                    timer: 2000  // Auto-close after 2 seconds
-                });
+                        {{ ticket.get_status_display }}
+                    </span>
+                </li>
             {% endfor %}
-        </script>
+        </ul>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if user_tickets.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ user_tickets.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ user_tickets.number }} of {{ user_tickets.paginator.num_pages }}.
+                </span>
+
+                {% if user_tickets.has_next %}
+                    <a href="?page={{ user_tickets.next_page_number }}">next</a>
+                    <a href="?page={{ user_tickets.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No tickets {{ ticket_type }} yet.</p>
     {% endif %}
-    </div>
-</body>
-</html>
+
+    {% if not is_tech_support %}
+        <a href="{% url 'ticket_create' %}" class="btn btn-primary">Create a New Ticket</a>
+    {% endif %}
+    <a href="{% url 'logout' %}" class="btn btn-outline-primary">Logout</a>
+{% endblock %}

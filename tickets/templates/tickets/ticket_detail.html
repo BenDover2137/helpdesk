@@ -1,50 +1,70 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Detail</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-</head>
-<body>
-    <div class="container">
-        <h1>{{ ticket.title }}</h1>
-        <p>{{ ticket.description }}</p>
-        <p>Status:
-            <span class="status
-                {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
-                {{ ticket.get_status_display }}
-            </span>
-        </p>
-        <p>Created by: {{ ticket.created_by }}</p>
-        <p>Assigned to: {{ ticket.assigned_to }}</p>
+{% extends 'base.html' %}
 
-        {% if is_creator or is_tech_support %}
-            <h2>Update Status</h2>
-            <form method="post" class="mb-3">
-                {% csrf_token %}
-                {{ status_form.as_p }}
-                <button type="submit" class="btn btn-success">Update Status</button>
-            </form>
-        {% endif %}
+{% block title %}Ticket Detail - {{ ticket.title }}{% endblock %}
 
-        <h2>Comments</h2>
-        <ul class="comment-list">
-            {% for comment in ticket.comments.all %}
-                <li>{{ comment.content }} - {{ comment.author }} ({{ comment.created_at }})</li>
-            {% endfor %}
-        </ul>
+{% block content %}
+    <h1>{{ ticket.title }}</h1>
 
-        <h2>Add a Comment</h2>
+    <p>Status:
+        <span class="status
+            {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
+            {{ ticket.get_status_display }}
+        </span>
+    </p>
+    {% if is_tech_support %}<p>Created by: {{ ticket.created_by }}</p>{% endif %}
+    <p>Assigned to: {{ ticket.assigned_to }}</p>
+
+    {% if is_creator or is_tech_support %}
+        <h2>Update Status</h2>
         <form method="post">
             {% csrf_token %}
-            {{ comment_form.as_p }}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            {{ status_form.as_p }}
+            {% if is_tech_support %}
+                <button type="submit" name="update_status">Update Status</button>
+            {% endif %}
+
         </form>
-        {% if is_creator or is_tech_support %}
-            <a href="{% url 'ticket_list' %}" class="btn btn-link">Back to Ticket List</a>
-        {% endif %}
+    {% endif %}
+
+    <h2>Comments</h2>
+    <ul class="comment-list">
+        {% for comment in ticket.comments.all %}
+            <li>{{ comment.content }} - {{ comment.author }} ({{ comment.created_at }})</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add a Comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" name="add_comment" class="btn btn-primary">Submit</button>
+    </form>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if comments.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ comments.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ comments.number }} of {{ comments.paginator.num_pages }}.
+            </span>
+
+            {% if comments.has_next %}
+                <a href="?page={{ comments.next_page_number }}">next</a>
+                <a href="?page={{ comments.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
-</body>
-</html>
+
+    {% if is_creator or is_tech_support %}
+        <a href="{% url 'profile' %}" class="btn btn-outline-primary">Back to dashboard</a>
+    {% endif %}
+    {% if is_tech_support and ticket.status == 'closed' %}
+        <form method="post" action="{% url 'delete_ticket' ticket.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Ticket</button>
+        </form>
+    {% endif %}
+{% endblock %}
