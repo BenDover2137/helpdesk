@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Ticket</title>
+
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
 </head>
 <body>
     <div class="container">
@@ -14,8 +16,10 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Create</button>
+
         </form>
-        <a href="{% url 'ticket_list' %}" class="btn btn-link">Back to Ticket List</a>
+        <a href="{% url 'profile' %}" class="btn btn-link">Back to profile</a>
     </div>
+
 </body>
 </html>
