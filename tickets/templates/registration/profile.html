@@ -1,21 +1,52 @@
-<h1>Profile Page</h1>
-<p>Welcome, {{ user.username }}!</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Profile Page</h1>
+        <p>Welcome, {{ user.username }}!</p>
+        <h2>Tickets {{ ticket_type }}</h2>
 
 
-<h2>Tickets {{ ticket_type }}</h2>
-{% if user_tickets %}
-    <ul>
-        {% for ticket in user_tickets %}
-            <li>
-                <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.title }}</a> - {{ ticket.status }}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No tickets {{ ticket_type }}.</p>
-{% endif %}
+        {% if user_tickets %}
+            <ul class="ticket-list">
+                {% for ticket in user_tickets %}
+                    <li>
+                        <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.title }}</a>
+                        <span class="status
+                            {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
+                            {{ ticket.get_status_display }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tickets {{ ticket_type }}.</p>
+        {% endif %}
 
-{% if not is_tech_support %}
-    <p><a href="{% url 'ticket_create' %}">Create a New Ticket</a></p>
-{% endif %}
-<a href="{% url 'logout' %}">Logout</a>
+        {% if not is_tech_support %}
+            <a href="{% url 'ticket_create' %}" class="btn btn-primary">Create a New Ticket</a>
+        {% endif %}
+        <a href="{% url 'logout' %}" class="btn btn-link">Logout</a>
+        {% if messages %}
+        <script>
+            {% for message in messages %}
+                Swal.fire({
+                    icon: 'success',  // Use 'success', 'error', 'info', etc.
+                    title: '{{ message }}',
+                    showConfirmButton: false,
+                    timer: 2000  // Auto-close after 2 seconds
+                });
+            {% endfor %}
+        </script>
+    {% endif %}
+    </div>
+</body>
+</html>

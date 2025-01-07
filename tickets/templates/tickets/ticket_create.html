@@ -1,7 +1,21 @@
-<h1>Create New Ticket</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
-<a href="{% url 'ticket_list' %}">Back to Ticket List</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ticket</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Ticket</h1>
+        <form method="post" class="mb-3">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+        <a href="{% url 'ticket_list' %}" class="btn btn-link">Back to Ticket List</a>
+    </div>
+</body>
+</html>

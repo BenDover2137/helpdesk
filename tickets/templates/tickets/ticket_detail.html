@@ -1,41 +1,50 @@
-<h1>{{ ticket.title }}</h1>
-<p>{{ ticket.description }}</p>
-<p>Status:
-    <span style="
-        background-color: {% if ticket.status == 'open' %}lightblue{% elif ticket.status == 'in_progress' %}orange{% else %}lightgreen{% endif %};
-        padding: 5px;
-        border-radius: 5px;
-    ">
-        {{ ticket.get_status_display }}
-    </span>
-</p>
-<p>Created by: {{ ticket.created_by }}</p>
-<p>Assigned to: {{ ticket.assigned_to }}</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Detail</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ ticket.title }}</h1>
+        <p>{{ ticket.description }}</p>
+        <p>Status:
+            <span class="status
+                {% if ticket.status == 'open' %}open{% elif ticket.status == 'in_progress' %}in-progress{% else %}closed{% endif %}">
+                {{ ticket.get_status_display }}
+            </span>
+        </p>
+        <p>Created by: {{ ticket.created_by }}</p>
+        <p>Assigned to: {{ ticket.assigned_to }}</p>
 
+        {% if is_creator or is_tech_support %}
+            <h2>Update Status</h2>
+            <form method="post" class="mb-3">
+                {% csrf_token %}
+                {{ status_form.as_p }}
+                <button type="submit" class="btn btn-success">Update Status</button>
+            </form>
+        {% endif %}
 
-{% if is_creator or is_tech_support %}
-    <h2>Update Status</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ status_form.as_p }}
-        <button type="submit" name="update_status">Update Status</button>
-    </form>
-{% endif %}
+        <h2>Comments</h2>
+        <ul class="comment-list">
+            {% for comment in ticket.comments.all %}
+                <li>{{ comment.content }} - {{ comment.author }} ({{ comment.created_at }})</li>
+            {% endfor %}
+        </ul>
 
-
-<h2>Comments</h2>
-<ul>
-    {% for comment in ticket.comments.all %}
-        <li>{{ comment.content }} - {{ comment.author }} ({{ comment.created_at }})</li>
-    {% endfor %}
-</ul>
-
-
-<h2>Add a Comment</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <button type="submit" name="add_comment">Submit</button>
-</form>
-
-<a href="{% url 'ticket_list' %}">Back to Ticket List</a>
+        <h2>Add a Comment</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% if is_creator or is_tech_support %}
+            <a href="{% url 'ticket_list' %}" class="btn btn-link">Back to Ticket List</a>
+        {% endif %}
+    </div>
+</body>
+</html>
