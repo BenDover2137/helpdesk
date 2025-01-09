@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 class ProblemType(models.Model):
     name = models.CharField(max_length=100)
 
@@ -17,8 +18,8 @@ class Ticket(models.Model):
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_tickets')
-    problem_type = models.ForeignKey(ProblemType, on_delete=models.SET_NULL, null=True, blank=True)
-    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tickets')
+    problem_type = models.ForeignKey(ProblemType, on_delete=models.SET_NULL, null=True)
+    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assigned_tickets')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -37,5 +38,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author} on {self.ticket.title}"
-
 

@@ -146,3 +146,32 @@ form .form-control {
     background-color: red;
     color: white;
 }
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.welcome{
+    display: flex;
+     font-size: 18px;
+    justify-content: center;
+    color: darkgreen;
+    font-weight: bold;
+
+}
+.btn-outline-primary {
+ margin-top: 10px;
+}
+form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.class{
+    font-weight: bold;
+    font-style: italic;
+}

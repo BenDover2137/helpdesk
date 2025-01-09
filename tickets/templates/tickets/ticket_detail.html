@@ -3,7 +3,7 @@
 {% block title %}Ticket Detail - {{ ticket.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ ticket.title }}</h1>
+    <h1 class="class">{{ ticket.title }}</h1>
 
     <p>Status:
         <span class="status
@@ -13,20 +13,20 @@
     </p>
     {% if is_tech_support %}<p>Created by: {{ ticket.created_by }}</p>{% endif %}
     <p>Assigned to: {{ ticket.assigned_to }}</p>
-
+<hr>
     {% if is_creator or is_tech_support %}
-        <h2>Update Status</h2>
+        <h2 class="class">Update Status</h2>
         <form method="post">
             {% csrf_token %}
             {{ status_form.as_p }}
             {% if is_tech_support %}
                 <button type="submit" name="update_status">Update Status</button>
             {% endif %}
-
+<hr>
         </form>
     {% endif %}
 
-    <h2>Comments</h2>
+    <h2 class="class">Comments</h2>
     <ul class="comment-list">
         {% for comment in ticket.comments.all %}
             <li>{{ comment.content }} - {{ comment.author }} ({{ comment.created_at }})</li>

@@ -1,13 +1,13 @@
 
 from django.contrib.auth.decorators import login_required
-
 from .models import Ticket, Comment
 from tickets.forms import TicketForm
-
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import base64
+from io import BytesIO
 def custom_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -172,6 +172,35 @@ def ticket_create(request):
     return render(request, 'tickets/ticket_create.html', {'form': form})
 
 
-from django.shortcuts import render
 
+from django.contrib.auth.models import Group
+from django.shortcuts import render
+import matplotlib.pyplot as plt
+import io
+from django.db import models
+def bar_view(request):
+
+    status_counts = Ticket.objects.values('status').annotate(count=models.Count('status'))
+    statuses = [item['status'] for item in status_counts]
+    counts = [item['count'] for item in status_counts]
+
+    plt.figure(figsize=(6, 4))
+    plt.bar(statuses, counts, color=['red', 'orange', 'green'], width=0.5)
+    plt.title('Number of Tickets')
+    plt.xlabel('Status')
+    plt.ylabel('Tickets')
+    max_count = max(counts)
+    plt.ylim(0, max_count + 5)
+
+
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    plt.close()
+    img.seek(0)
+
+
+    image_data = base64.b64encode(img.getvalue()).decode('utf-8')
+
+
+    return render(request, 'tickets/bar.html', {'image_data': image_data})
 

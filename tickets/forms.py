@@ -26,6 +26,7 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ['title', 'description', 'problem_type', 'assigned_to']
+        widgets = {'description': forms.Textarea(attrs={'placeholder': 'What is the issue?'})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

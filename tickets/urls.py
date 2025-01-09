@@ -14,7 +14,8 @@ urlpatterns = [
     path('', views.profile, name='ticket_list'),
     path('ticket/create/', views.ticket_create, name='ticket_create'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('login/', views.custom_login, name='login'),  # Ensure this matches LOGIN_URL
+    path('login/', views.custom_login, name='login'),
     path('register/', views.register, name='register'),
+    path('bar/', views.bar_view, name='bar'),
 
 ]

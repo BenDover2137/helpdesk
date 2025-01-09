@@ -3,6 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+      <div class="login-container">
     <h1>Login</h1>
     <form method="post" class="mb-3">
         {% csrf_token %}
@@ -10,4 +11,5 @@
         <button type="submit" class="btn btn-success">Login</button>
     </form>
     <p>Don't have an account? <a href="{% url 'register' %}" class="btn btn-primary">Register here</a>.</p>
+       </div>
 {% endblock %}
